@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Demande en mariage</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background: #ffe6f0;
+      overflow: hidden;
+    }
+    .container {
+      text-align: center;
+    }
+    .heart {
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      background: red;
+      transform: rotate(45deg);
+      animation: fall 3s linear forwards;
+    }
+    .heart::before,
+    .heart::after {
+      content: "";
+      position: absolute;
+      width: 20px;
+      height: 20px;
+      background: red;
+      border-radius: 50%;
+    }
+    .heart::before {
+      top: -10px;
+      left: 0;
+    }
+    .heart::after {
+      left: -10px;
+      top: 0;
+    }
+    @keyframes fall {
+      0% { transform: translateY(0) rotate(45deg); opacity: 1; }
+      100% { transform: translateY(100vh) rotate(45deg); opacity: 0; }
+    }
+    .message {
+      margin-top: 20px;
+      font-size: 24px;
+      color: #c71585;
+      opacity: 0;
+      transition: opacity 1s ease-in-out;
+    }
+    .show {
+      opacity: 1;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Acceptes-tu de m'épouser ? 💍</h1>
+    <button onclick="sayYes()">Oui ❤️</button>
+    <div id="message" class="message">Pour la vie... 💖</div>
+  </div>
+
+  <script>
+    function createHeart() {
+      const heart = document.createElement('div');
+      heart.classList.add('heart');
+      heart.style.left = Math.random() * 100 + 'vw';
+      document.body.appendChild(heart);
+
+      setTimeout(() => {
+        heart.remove();
+      }, 3000);
+    }
+
+    function sayYes() {
+      const msg = document.getElementById('message');
+      msg.classList.add('show');
+      for (let i = 0; i < 50; i++) {
+        setTimeout(createHeart, i * 100);
+      }
+    }
+  </script>
+</body>
+</html>
