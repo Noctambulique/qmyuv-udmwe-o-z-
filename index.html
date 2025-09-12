@@ -3,59 +3,53 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Bartender — The Right Mix (Clone)</title>
+  <title>Philosopher — Le Bon Concept</title>
   <style>
-    :root{--bg:#0f1724;--card:#0b1220;--accent:#f59e0b;--muted:#94a3b8}
-    html,body{height:100%;margin:0;font-family:Inter,Segoe UI,Roboto,Arial;background:linear-gradient(180deg,#071021 0%,#0b1220 100%);color:#e6eef8}
+    :root{--bg:#0f1724;--card:#0b1220;--accent:#38bdf8;--muted:#94a3b8}
+    html,body{height:100%;margin:0;font-family:Georgia,serif;background:linear-gradient(180deg,#0a0f1d 0%,#10192c 100%);color:#e6eef8}
     .wrap{max-width:1000px;margin:24px auto;padding:18px}
     header{display:flex;align-items:center;gap:12px}
     h1{margin:0;font-size:20px}
     .board{display:grid;grid-template-columns:260px 1fr 260px;gap:14px;margin-top:18px}
-    .panel{background:linear-gradient(180deg,var(--card),#071523);border-radius:12px;padding:12px;box-shadow:0 6px 18px rgba(2,6,23,.6)}
+    .panel{background:linear-gradient(180deg,var(--card),#0d1528);border-radius:12px;padding:12px;box-shadow:0 6px 18px rgba(2,6,23,.6)}
 
-    /* Left: bottles */
-    .bottles{display:grid;grid-template-columns:1fr;gap:10px}
-    .bottle{display:flex;align-items:center;gap:10px;padding:8px;border-radius:8px;background:rgba(255,255,255,0.02);cursor:pointer;transition:transform .12s}
+    .bottles{display:grid;gap:10px}
+    .bottle{display:flex;align-items:center;gap:10px;padding:8px;border-radius:8px;background:rgba(255,255,255,0.03);cursor:pointer;transition:transform .12s}
     .bottle:hover{transform:translateY(-4px)}
     .bottle .cap{width:40px;height:40px;border-radius:6px;background:#0f1724;display:flex;align-items:center;justify-content:center;font-weight:700}
     .bottle .meta{flex:1}
     .bottle .meta small{display:block;color:var(--muted)}
 
-    /* Centre: bar */
     .bar-view{display:flex;flex-direction:column;align-items:center;gap:12px;padding:18px}
-    .stage{width:100%;max-width:520px;height:260px;border-radius:14px;background:linear-gradient(180deg,#061423,#0c1b2a);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
-    .glass{width:160px;height:180px;border:6px solid rgba(255,255,255,0.06);border-bottom-left-radius:80px;border-bottom-right-radius:80px;border-top-left-radius:12px;border-top-right-radius:12px;background:rgba(255,255,255,0.02);position:relative;overflow:hidden;display:flex;flex-direction:column-reverse;align-items:center}
+    .stage{width:100%;max-width:520px;height:260px;border-radius:14px;background:linear-gradient(180deg,#081223,#0c1b2a);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+    .glass{width:160px;height:180px;border:2px solid rgba(255,255,255,0.08);border-radius:12px;background:rgba(255,255,255,0.02);overflow:hidden;display:flex;flex-direction:column-reverse;align-items:center}
     .liquid{width:100%;transition:height .35s ease, background .25s linear;display:block}
     .garnish{position:absolute;top:12px;right:12px;font-size:22px}
     .controls{display:flex;gap:10px;align-items:center;margin-top:8px}
     button{background:transparent;border:1px solid rgba(255,255,255,0.06);color:inherit;padding:8px 10px;border-radius:8px;cursor:pointer}
     .btn-primary{background:var(--accent);color:#071021;border:none}
 
-    /* Right: recipe and history */
     .recipes{display:flex;flex-direction:column;gap:10px}
     .recipe{padding:10px;border-radius:8px;background:rgba(255,255,255,0.02)}
     .history{max-height:240px;overflow:auto;padding:8px;border-radius:8px;background:rgba(255,255,255,0.01)}
 
-    /* reactions */
-    .reaction{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-size:34px;padding:10px 18px;border-radius:12px;background:rgba(0,0,0,0.6);opacity:0;transition:opacity .25s,transform .35s}
+    .reaction{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-size:24px;padding:10px 18px;border-radius:12px;background:rgba(0,0,0,0.6);opacity:0;transition:opacity .25s,transform .35s}
     .reaction.show{opacity:1;transform:translate(-50%,-90%)}
 
     footer{margin-top:14px;color:var(--muted);font-size:13px}
-
-    /* small responsive */
     @media (max-width:900px){.board{grid-template-columns:1fr;}.panel{padding:10px}}
   </style>
 </head>
 <body>
   <div class="wrap">
     <header>
-      <h1>Bartender — The Right Mix (Clone)</h1>
-      <div style="margin-left:auto;color:var(--muted)">Cliquez pour verser • Secouez • Servez</div>
+      <h1>Philosopher — Le Bon Concept</h1>
+      <div style="margin-left:auto;color:var(--muted)">Ajoutez des notions • Secouez • Formulez</div>
     </header>
 
     <div class="board">
       <div class="panel">
-        <h3>Ingrédients</h3>
+        <h3>Notions</h3>
         <div class="bottles" id="bottles"></div>
       </div>
 
@@ -64,281 +58,141 @@
           <div class="glass" id="glass">
             <div id="liquid" class="liquid" style="height:0%"></div>
           </div>
-          <div class="garnish" id="garnish">🍋</div>
+          <div class="garnish" id="garnish">📜</div>
           <div class="reaction" id="reaction">OK</div>
         </div>
 
         <div class="controls">
-          <button id="undo">Annuler dernier versement</button>
-          <button id="clear">Vider le verre</button>
-          <button id="shake">Secouer</button>
-          <button class="btn-primary" id="serve">Servir</button>
+          <button id="undo">Annuler</button>
+          <button id="clear">Vider</button>
+          <button id="shake">Dialectiser</button>
+          <button class="btn-primary" id="serve">Publier</button>
         </div>
 
         <div style="width:100%;display:flex;justify-content:space-between;margin-top:8px">
-          <div>Volume: <span id="volume">0</span>/100</div>
-          <div>États: <span id="state">Calme</span></div>
+          <div>Concept: <span id="volume">0</span>/100</div>
+          <div>État: <span id="state">Calme</span></div>
         </div>
       </div>
 
       <div class="panel">
-        <h3>Recettes suggérées</h3>
+        <h3>Doctrines suggérées</h3>
         <div class="recipes" id="recipes"></div>
         <h3 style="margin-top:12px">Historique</h3>
         <div class="history" id="history"></div>
       </div>
     </div>
 
-    <footer>Fichier autonome — vous pouvez copier/coller ce HTML dans un fichier <code>bartender.html</code> et l'ouvrir localement.</footer>
+    <footer>Fichier autonome — <code>philosopher.html</code></footer>
   </div>
 
   <script>
-    /* --- données du jeu --- */
     const INGREDIENTS = [
-      {id:'vodka',name:'Vodka',abbr:'V',strength:40,flavor:0.1,color:'#e6eef8'},
-      {id:'rum',name:'Rhum',abbr:'R',strength:37,flavor:0.12,color:'#fff6e6'},
-      {id:'gin',name:'Gin',abbr:'G',strength:42,flavor:0.08,color:'#e8f8ff'},
-      {id:'tequila',name:'Tequila',abbr:'T',strength:38,flavor:0.09,color:'#fff2e6'},
-      {id:'orange',name:'Jus d\'orange',abbr:'O',strength:0,flavor:0.5,color:'#ffb54d'},
-      {id:'cran',name:'Jus de cranberry',abbr:'C',strength:0,flavor:0.55,color:'#d94b6a'},
-      {id:'cola',name:'Cola',abbr:'Co',strength:0,flavor:0.45,color:'#3b2f2f'},
-      {id:'lime',name:'Citron vert',abbr:'L',strength:0,flavor:0.35,color:'#c6f6d5'},
-      {id:'syrup',name:'Sirop',abbr:'S',strength:0,flavor:0.7,color:'#ffd6e0'},
-      {id:'ice',name:'Glaçons',abbr:'I',strength:0,flavor:0,color:'#e0f7ff'}
+      {id:'raison',name:'Raison',abbr:'R',strength:40,flavor:0.1,color:'#b0d4ff'},
+      {id:'sens',name:'Sensibilité',abbr:'S',strength:0,flavor:0.5,color:'#ffd580'},
+      {id:'foi',name:'Foi',abbr:'F',strength:0,flavor:0.6,color:'#e2baf5'},
+      {id:'liberte',name:'Liberté',abbr:'L',strength:20,flavor:0.3,color:'#9fffa6'},
+      {id:'nature',name:'Nature',abbr:'N',strength:0,flavor:0.4,color:'#afffaf'},
+      {id:'travail',name:'Travail',abbr:'T',strength:10,flavor:0.2,color:'#f2c88f'},
+      {id:'langage',name:'Langage',abbr:'La',strength:0,flavor:0.35,color:'#d4d4ff'},
+      {id:'pouvoir',name:'Pouvoir',abbr:'P',strength:35,flavor:0.15,color:'#ff9e9e'},
+      {id:'temps',name:'Temps',abbr:'Te',strength:0,flavor:0.25,color:'#cccccc'},
+      {id:'inconscient',name:'Inconscient',abbr:'I',strength:15,flavor:0.5,color:'#cba6f7'}
     ];
 
-    // Recettes 'idéales' (proportions en unités, total 100)
     const RECIPES = [
-      {name:'Soleil d\'été',mix:{vodka:30,orange:50,ice:20},desc:'Fruité et doux'},
-      {name:'Rouge Fêtard',mix:{rum:30,cran:50,syrup:20},desc:'Sucré, très festif'},
-      {name:'Mojito libre',mix:{rum:40,lime:30,syrup:10,ice:20},desc:'Acide et rafraîchissant'},
-      {name:'Gin Tonic (simple)',mix:{gin:30,cola:70,ice:0},desc:'Classique moderne'},
-      {name:'Choc brûlant',mix:{tequila:50,cola:40,syrup:10},desc:'Fort et pétillant'}
+      {name:'Rationalisme cartésien',mix:{raison:60,liberte:20,nature:20},desc:'Clarté et distinction'},
+      {name:'Empirisme britannique',mix:{sens:60,langage:20,nature:20},desc:'Expérience avant tout'},
+      {name:'Idéalisme allemand',mix:{raison:40,foi:30,liberte:30},desc:'Synthèse de l’esprit'},
+      {name:'Marxisme',mix:{travail:40,pouvoir:30,temps:30},desc:'Histoire et lutte sociale'},
+      {name:'Psychanalyse freudienne',mix:{inconscient:50,temps:20,langage:30},desc:'Forces cachées révélées'}
     ];
 
-    // état du verre
     const state = { pours:[], volume:0, shaken:false };
 
-    /* --- UI initialisation --- */
-    const bottlesEl = document.getElementById('bottles');
-    const recipesEl = document.getElementById('recipes');
-    const historyEl = document.getElementById('history');
-    const liquidEl = document.getElementById('liquid');
-    const volumeEl = document.getElementById('volume');
-    const stateEl = document.getElementById('state');
-    const reactionEl = document.getElementById('reaction');
-    const garnishEl = document.getElementById('garnish');
+    const bottlesEl=document.getElementById('bottles');
+    const recipesEl=document.getElementById('recipes');
+    const historyEl=document.getElementById('history');
+    const liquidEl=document.getElementById('liquid');
+    const volumeEl=document.getElementById('volume');
+    const stateEl=document.getElementById('state');
+    const reactionEl=document.getElementById('reaction');
+    const garnishEl=document.getElementById('garnish');
 
-    // créer les cartes bouteille
-    INGREDIENTS.forEach(ing => {
-      const div = document.createElement('div');
-      div.className='bottle';
-      div.dataset.id = ing.id;
-      div.innerHTML = `
-        <div class="cap" style="background:${ing.color}">${ing.abbr}</div>
-        <div class="meta"><strong>${ing.name}</strong><small>Alc ${ing.strength}% • Goût ${ing.flavor}</small></div>
-        <div><small>+10</small></div>
-      `;
-      div.addEventListener('click',()=> pour(ing.id,10));
+    INGREDIENTS.forEach(ing=>{
+      const div=document.createElement('div');
+      div.className='bottle'; div.dataset.id=ing.id;
+      div.innerHTML=`<div class="cap" style="background:${ing.color}">${ing.abbr}</div>
+        <div class="meta"><strong>${ing.name}</strong><small>Force ${ing.strength} • Valeur ${ing.flavor}</small></div>
+        <div><small>+10</small></div>`;
+      div.addEventListener('click',()=>pour(ing.id,10));
       bottlesEl.appendChild(div);
     });
 
-    // recettes affichage
-    RECIPES.forEach(r =>{
-      const d = document.createElement('div'); d.className='recipe';
-      const list = Object.entries(r.mix).map(([k,v])=>`${k}:${v}`).join(', ');
-      d.innerHTML = `<strong>${r.name}</strong><div style="font-size:13px;color:var(--muted)">${r.desc}</div><div style="margin-top:6px;font-size:12px">${list}</div>`;
+    RECIPES.forEach(r=>{
+      const d=document.createElement('div'); d.className='recipe';
+      const list=Object.entries(r.mix).map(([k,v])=>`${k}:${v}`).join(', ');
+      d.innerHTML=`<strong>${r.name}</strong><div style="font-size:13px;color:var(--muted)">${r.desc}</div><div style="margin-top:6px;font-size:12px">${list}</div>`;
       recipesEl.appendChild(d);
     });
 
-    // boutons
     document.getElementById('undo').addEventListener('click',undo);
     document.getElementById('clear').addEventListener('click',clearGlass);
-    document.getElementById('shake').addEventListener('click',()=>{state.shaken=true;stateEl.textContent='Secoué';showReaction('Secoué !');});
+    document.getElementById('shake').addEventListener('click',()=>{state.shaken=true;stateEl.textContent='Dialectisé';showReaction('Dialectisé !');});
     document.getElementById('serve').addEventListener('click',serve);
 
-    /* --- fonctions jeu --- */
     function pour(id,amount){
-      if(state.volume + amount > 100){ showReaction('Le verre déborde !'); return; }
-      state.pours.push({id,amount});
-      state.volume += amount;
-      updateGlass();
-      showReaction(`Versé ${amount} de ${id}`);
+      if(state.volume+amount>100){showReaction('Concept saturé !');return;}
+      state.pours.push({id,amount}); state.volume+=amount;
+      updateGlass(); showReaction(`Ajouté ${amount} de ${id}`);
     }
-
-    function undo(){
-      const last = state.pours.pop();
-      if(!last){ showReaction('Rien à annuler'); return; }
-      state.volume -= last.amount;
-      if(state.volume<0) state.volume=0;
-      updateGlass();
-      showReaction(`Annulé ${last.id}`);
-    }
-
-    function clearGlass(){
-      if(state.volume===0){ showReaction('Déjà vide'); return; }
-      const snapshot = summarizeState();
-      appendHistory(`Vider: ${snapshot.summary}`);
-      state.pours = [];
-      state.volume = 0;
-      state.shaken=false;
-      updateGlass();
-      showReaction('Verre vidé');
-    }
-
+    function undo(){const last=state.pours.pop();if(!last){showReaction('Rien à annuler');return;}
+      state.volume-=last.amount;updateGlass();showReaction(`Retiré ${last.id}`);}
+    function clearGlass(){state.pours=[];state.volume=0;state.shaken=false;updateGlass();showReaction('Concept effacé');}
     function serve(){
-      if(state.volume===0){ showReaction('Verre vide — impossible de servir'); return; }
-      const s = summarizeState();
-      const score = evaluate(s.composition);
-      const text = score.text + ` (score ${score.score.toFixed(2)})`;
-      appendHistory(`${new Date().toLocaleTimeString()} — ${text} — ${s.summary}`);
-      animateOutcome(score);
-      // reset after serve
-      state.pours = [];
-      state.volume = 0;
-      state.shaken = false;
-      setTimeout(updateGlass,800);
+      if(state.volume===0){showReaction('Vide !');return;}
+      const s=summarizeState(); const score=evaluate(s.composition);
+      appendHistory(`${new Date().toLocaleTimeString()} — ${score.text} — ${s.summary}`);
+      animateOutcome(score); state.pours=[];state.volume=0;state.shaken=false;setTimeout(updateGlass,800);
     }
 
     function summarizeState(){
-      const map = {};
-      state.pours.forEach(p=> map[p.id]=(map[p.id]||0)+p.amount);
-      const comp = {};
-      Object.keys(map).forEach(k=> comp[k]=Math.round(map[k]/(state.volume||1)*100));
-      const parts = Object.entries(map).map(([k,v])=>`${k}:${v}`).join(', ');
-      return {map,composition:comp,summary:parts || 'vide'};
+      const map={}; state.pours.forEach(p=>map[p.id]=(map[p.id]||0)+p.amount);
+      const comp={}; Object.keys(map).forEach(k=>comp[k]=Math.round(map[k]/(state.volume||1)*100));
+      const parts=Object.entries(map).map(([k,v])=>`${k}:${v}`).join(', ');
+      return {map,composition:comp,summary:parts||'vide'};
     }
 
-    // évalue la compo: on compare aux recettes (distance quadratique) et aussi on calcule une caractère fun
     function evaluate(composition){
-      // compute distance to recipes
-      let best = {score:Infinity,recipe:null};
+      let best={score:Infinity,recipe:null};
       RECIPES.forEach(r=>{
-        // compute expected percent for recipe keys (others 0)
-        const keys = Array.from(new Set([...Object.keys(r.mix),...Object.keys(composition)]));
-        let dist=0;
-        keys.forEach(k=>{
-          const want = r.mix[k] || 0;
-          const have = composition[k] || 0;
-          const d = (have - want);
-          dist += d*d;
-        });
-        if(dist < best.score){ best.score = dist; best.recipe = r; }
+        const keys=new Set([...Object.keys(r.mix),...Object.keys(composition)]);
+        let dist=0; keys.forEach(k=>{const want=r.mix[k]||0;const have=composition[k]||0;dist+=(have-want)**2;});
+        if(dist<best.score){best.score=dist;best.recipe=r;}
       });
-      // smaller dist = better; convert to nice score
-      const normalized = Math.max(0, 100 - Math.sqrt(best.score));
-      // alcohol content
-      let alc=0; let flavor=0;
-      Object.entries(composition).forEach(([k,perc])=>{
-        const ing = INGREDIENTS.find(i=>i.id===k);
-        if(!ing) return;
-        alc += (ing.strength||0) * perc/100;
-        flavor += (ing.flavor||0) * perc/100;
-      });
-
-      // produce textual verdict
+      const normalized=Math.max(0,100-Math.sqrt(best.score));
       let text='Inclassable';
-      if(normalized>80 && alc<30) text = `Excellent — proche de «${best.recipe.name}»`;
-      else if(normalized>60) text = `Très bon — ressemble à «${best.recipe.name}»`;
-      else if(normalized>35) text = `Correct — expérimental`;
-      else if(normalized>15) text = `Moyen — étrange`;
-      else text = `Désastreux — ne sert pas ça !`;
-
-      // extra quirks
-      if(alc>35 && state.shaken) text += ' — puissant et bien émulsionné';
-      if(flavor>0.6) text += ' — très sucré';
-
-      return {score:normalized,text,alc,flavor,recipe:best.recipe};
+      if(normalized>80) text=`Excellent — proche de «${best.recipe.name}»`;
+      else if(normalized>60) text=`Très bon — rappelle «${best.recipe.name}»`;
+      else if(normalized>35) text=`Correct — expérimental`;
+      else if(normalized>15) text=`Confus — mélange incertain`;
+      else text=`Désastreux — aporie totale !`;
+      return {score:normalized,text,recipe:best.recipe};
     }
 
     function animateOutcome(score){
-      const r = reactionEl;
-      r.textContent = score.text;
-      r.classList.add('show');
-      // garnish change
-      if(score.flavor>0.55) garnishEl.textContent='🍓';
-      else if(score.alc>30) garnishEl.textContent='🔥';
-      else garnishEl.textContent='🍋';
-      // small confetti for very good
-      if(score.score>85){
-        confettiBurst();
-      }
-      setTimeout(()=> r.classList.remove('show'),1600);
-    }
-
-    // simple confetti using DOM
-    function confettiBurst(){
-      for(let i=0;i<18;i++){
-        const el = document.createElement('div');
-        el.textContent = ['🎉','✨','🍹','🍋'][Math.floor(Math.random()*4)];
-        el.style.position='absolute'; el.style.left='50%'; el.style.top='50%';
-        el.style.transform='translate(-50%,-50%)'; el.style.fontSize='18px';
-        el.style.opacity='0'; el.style.transition='all 1000ms ease-out';
-        document.body.appendChild(el);
-        requestAnimationFrame(()=>{
-          el.style.left=(30+Math.random()*40)+'%';
-          el.style.top=(20+Math.random()*60)+'%';
-          el.style.opacity='1';
-        });
-        setTimeout(()=> el.style.opacity='0',700);
-        setTimeout(()=> el.remove(),1400);
-      }
+      reactionEl.textContent=score.text; reactionEl.classList.add('show');
+      garnishEl.textContent=score.score>70?'📘':'📜';
+      setTimeout(()=>reactionEl.classList.remove('show'),1600);
     }
 
     function appendHistory(text){
-      const d = document.createElement('div'); d.style.padding='6px 4px'; d.style.fontSize='13px'; d.style.borderBottom='1px dashed rgba(255,255,255,0.02)';
-      d.textContent = text;
-      historyEl.prepend(d);
+      const d=document.createElement('div'); d.style.padding='6px 4px'; d.style.fontSize='13px';
+      d.textContent=text; historyEl.prepend(d);
     }
-
-    function updateGlass(){
-      const h = Math.min(100, state.volume);
-      liquidEl.style.height = h + '%';
-      // mix color roughly based on composition
-      const map = {};
-      state.pours.forEach(p=> map[p.id]=(map[p.id]||0)+p.amount);
-      // compute weighted average color
-      let r=0,g=0,b=0,total=0;
-      Object.entries(map).forEach(([k,v])=>{
-        const ing = INGREDIENTS.find(i=>i.id===k);
-        if(!ing) return; const col = hexToRgb(ing.color); if(!col) return;
-        r += col.r * v; g += col.g * v; b += col.b * v; total += v;
-      });
-      if(total>0){ r=Math.round(r/total); g=Math.round(g/total); b=Math.round(b/total); liquidEl.style.background = `linear-gradient(180deg, rgba(${r},${g},${b},0.95), rgba(${Math.max(0,r-30)},${Math.max(0,g-30)},${Math.max(0,b-30)},0.9))`; }
-      else liquidEl.style.background='transparent';
-
-      volumeEl.textContent = state.volume;
-    }
-
-    function showReaction(txt){
-      reactionEl.textContent = txt; reactionEl.classList.add('show');
-      setTimeout(()=> reactionEl.classList.remove('show'),900);
-    }
-
-    function hexToRgb(hex){
-      if(!hex) return null; hex = hex.replace('#','');
-      if(hex.length===3) hex = hex.split('').map(c=>c+c).join('');
-      const num = parseInt(hex,16);
-      return {r:(num>>16)&255,g:(num>>8)&255,b:num&255};
-    }
-
-    // aide: raccourcis clavier pour tester
-    window.addEventListener('keydown',e=>{
-      if(e.key==='1') pour('vodka',10);
-      if(e.key==='2') pour('rum',10);
-      if(e.key==='3') pour('gin',10);
-      if(e.key==='4') pour('tequila',10);
-      if(e.key==='5') pour('orange',10);
-      if(e.key==='6') pour('cran',10);
-      if(e.key==='7') pour('cola',10);
-      if(e.key==='8') pour('lime',10);
-      if(e.key==='9') pour('syrup',10);
-      if(e.key==='0') pour('ice',10);
-    });
-
-    // initial render
-    updateGlass();
-    appendHistory('Bienvenue — préparez un cocktail et servez-le.');
+    function updateGlass(){liquidEl.style.height=Math.min(100,state.volume)+'%';volumeEl.textContent=state.volume;}
+    function showReaction(txt){reactionEl.textContent=txt;reactionEl.classList.add('show');setTimeout(()=>reactionEl.classList.remove('show'),900);}
+    updateGlass(); appendHistory('Bienvenue — composez votre doctrine !');
   </script>
 </body>
 </html>
