@@ -8,12 +8,12 @@
     :root{--bg:#1a0f1f;--card:#24122b;--accent:#9b59b6;--muted:#a29fb0}
     html,body{height:100%;margin:0;font-family:Inter,Segoe UI,Roboto,Arial;background:linear-gradient(180deg,#0d0511 0%,#1a0f1f 100%);color:#f0eaf8}
     .wrap{max-width:1000px;margin:24px auto;padding:18px}
-    header{display:flex;align-items:center;gap:12px}
+    header{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
     h1{margin:0;font-size:22px}
     .board{display:grid;grid-template-columns:260px 1fr 260px;gap:14px;margin-top:18px}
     .panel{background:linear-gradient(180deg,var(--card),#13091a);border-radius:12px;padding:12px;box-shadow:0 6px 18px rgba(0,0,0,.6)}
 
-    /* Left: ingrédients */
+    /* Ingrédients */
     .bottles{display:grid;grid-template-columns:1fr;gap:10px}
     .bottle{display:flex;align-items:center;gap:10px;padding:8px;border-radius:8px;background:rgba(255,255,255,0.03);cursor:pointer;transition:transform .12s}
     .bottle:hover{transform:translateY(-4px)}
@@ -21,41 +21,41 @@
     .bottle .meta{flex:1}
     .bottle .meta small{display:block;color:var(--muted)}
 
-    /* Centre: chaudron */
+    /* Chaudron */
     .bar-view{display:flex;flex-direction:column;align-items:center;gap:12px;padding:18px}
     .stage{width:100%;max-width:520px;height:260px;border-radius:14px;background:linear-gradient(180deg,#12091b,#200d2b);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
     .glass{width:180px;height:180px;border:6px solid rgba(255,255,255,0.08);border-radius:50%;background:rgba(255,255,255,0.02);position:relative;overflow:hidden;display:flex;flex-direction:column-reverse;align-items:center}
     .liquid{width:100%;transition:height .35s ease, background .25s linear;display:block}
     .garnish{position:absolute;top:12px;right:12px;font-size:22px}
-    .controls{display:flex;gap:10px;align-items:center;margin-top:8px}
-    button{background:transparent;border:1px solid rgba(255,255,255,0.06);color:inherit;padding:8px 10px;border-radius:8px;cursor:pointer}
+    .controls{display:flex;gap:10px;align-items:center;margin-top:8px;flex-wrap:wrap}
+    button{flex:1;min-width:90px;background:transparent;border:1px solid rgba(255,255,255,0.06);color:inherit;padding:10px;border-radius:8px;cursor:pointer}
     .btn-primary{background:var(--accent);color:#fff;border:none}
 
-    /* Right: recettes et historique */
+    /* Recettes + Historique */
     .recipes{display:flex;flex-direction:column;gap:10px}
     .recipe{padding:10px;border-radius:8px;background:rgba(255,255,255,0.03)}
     .history{max-height:240px;overflow:auto;padding:8px;border-radius:8px;background:rgba(255,255,255,0.01)}
 
-    /* réactions */
-    .reaction{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-size:30px;padding:10px 18px;border-radius:12px;background:rgba(0,0,0,0.6);opacity:0;transition:opacity .25s,transform .35s}
+    /* Réactions */
+    .reaction{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-size:20px;padding:8px 14px;border-radius:12px;background:rgba(0,0,0,0.6);opacity:0;transition:opacity .25s,transform .35s;text-align:center}
     .reaction.show{opacity:1;transform:translate(-50%,-90%)}
 
-    /* effet Noctambule */
+    /* Effet Noctambule */
     .noctambule{
       position:absolute;
       top:50%;left:50%;
       transform:translate(-50%,-50%);
-      font-size:60px;
+      font-size:34px;
       font-weight:bold;
       color:#e0d4ff;
-      text-shadow:0 0 25px #9b59b6,0 0 45px #fff;
+      text-shadow:0 0 15px #9b59b6,0 0 25px #fff;
       opacity:0;
       transition:opacity 0.8s ease;
       z-index:20;
     }
     .noctambule.show{opacity:1;}
 
-    footer{margin-top:14px;color:var(--muted);font-size:13px}
+    footer{margin-top:14px;color:var(--muted);font-size:13px;text-align:center}
     @media (max-width:900px){.board{grid-template-columns:1fr;}.panel{padding:10px}}
   </style>
 </head>
@@ -63,7 +63,7 @@
   <div class="wrap">
     <header>
       <h1>Atelier de Potions Magiques</h1>
-      <div style="margin-left:auto;color:var(--muted)">Choisissez vos ingrédients • Secouez • Servez</div>
+      <div style="margin-left:auto;color:var(--muted)">Or : <span id="gold">0</span> 💰</div>
     </header>
 
     <div class="board">
@@ -89,7 +89,7 @@
           <button class="btn-primary" id="serve">Servir</button>
         </div>
 
-        <div style="width:100%;display:flex;justify-content:space-between;margin-top:8px">
+        <div style="width:100%;display:flex;justify-content:space-between;margin-top:8px;flex-wrap:wrap">
           <div>Volume: <span id="volume">0</span>/100</div>
           <div>État: <span id="state">Calme</span></div>
         </div>
@@ -103,21 +103,23 @@
       </div>
     </div>
 
-    <footer>Version potions magiques ✨</footer>
+    <footer>Version potions magiques ✨ — Optimisé pour mobile</footer>
   </div>
 
   <script>
-    /* --- ingrédients magiques --- */
+    /* --- ingrédients (ordre mélangé + nouveaux) --- */
     const INGREDIENTS = [
-      {id:'fee', name:'Poussière de fée', abbr:'✨', color:'#f9d6ff'},
-      {id:'dragon', name:'Écaille de dragon', abbr:'🐉', color:'#d94b6a'},
-      {id:'corbeau', name:'Plume de corbeau', abbr:'🪶', color:'#333333'},
-      {id:'paon', name:'Plume de paon', abbr:'🦚', color:'#1abc9c'},
-      {id:'herbes', name:'Herbes anciennes', abbr:'🌿', color:'#2ecc71'},
-      {id:'cristal', name:'Cristaux lunaires', abbr:'💎', color:'#5dade2'},
-      {id:'serpent', name:'Venin de serpent', abbr:'🐍', color:'#27ae60'},
       {id:'etoile', name:'Poussière d’étoile', abbr:'🌌', color:'#8e44ad'},
-      {id:'rose', name:'Pétale de rose noire', abbr:'🌹', color:'#c0392b'}
+      {id:'herbes', name:'Herbes anciennes', abbr:'🌿', color:'#2ecc71'},
+      {id:'fee', name:'Poussière de fée', abbr:'✨', color:'#f9d6ff'},
+      {id:'rose', name:'Pétale de rose noire', abbr:'🌹', color:'#c0392b'},
+      {id:'serpent', name:'Venin de serpent', abbr:'🐍', color:'#27ae60'},
+      {id:'corbeau', name:'Plume de corbeau', abbr:'🪶', color:'#333333'},
+      {id:'dragon', name:'Écaille de dragon', abbr:'🐉', color:'#d94b6a'},
+      {id:'cristal', name:'Cristaux lunaires', abbr:'💎', color:'#5dade2'},
+      {id:'paon', name:'Plume de paon', abbr:'🦚', color:'#1abc9c'},
+      {id:'feu', name:'Souffle de feu', abbr:'🔥', color:'#e67e22'},
+      {id:'glace', name:'Éclat de glace éternelle', abbr:'❄️', color:'#85c1e9'}
     ];
 
     const RECIPES = [
@@ -126,6 +128,7 @@
       {name:'Lueur Nocturne', mix:{cristal:50,fee:50}, desc:'Vous brillez doucement dans la nuit.'}
     ];
 
+    let gold=0;
     const state = { pours:[], volume:0, shaken:false };
 
     const bottlesEl=document.getElementById('bottles');
@@ -137,6 +140,7 @@
     const reactionEl=document.getElementById('reaction');
     const garnishEl=document.getElementById('garnish');
     const noctambuleEl=document.getElementById('noctambule');
+    const goldEl=document.getElementById('gold');
 
     INGREDIENTS.forEach(ing=>{
       const div=document.createElement('div');
@@ -164,7 +168,7 @@
     function pour(id,amount){
       if(state.pours.length>=3){showReaction('Max 3 ingrédients !');return;}
       state.pours.push({id,amount});
-      state.volume+=Math.round(100/3); // jauge répartie sur 3 ingrédients
+      state.volume+=Math.round(100/3);
       if(state.volume>100)state.volume=100;
       updateGlass();
       showReaction(`Ajout de ${id}`);
@@ -191,6 +195,8 @@
       const result=evaluate(s.composition);
       appendHistory(`${new Date().toLocaleTimeString()} — ${result.text} — ${s.summary}`);
       animateOutcome(result);
+      gold+=Math.floor(result.score/10); // chaque potion rapporte de l'or
+      goldEl.textContent=gold;
       state.pours=[];state.volume=0;state.shaken=false;
       setTimeout(updateGlass,800);
     }
@@ -206,7 +212,6 @@
 
     function evaluate(composition){
       const ids=Object.keys(composition);
-      // cas spécial noctambule
       if(ids.includes('corbeau')&&ids.includes('paon')&&ids.includes('dragon')){
         noctambuleEl.classList.add("show");
         return {text:'Noctambule 🗝️',score:100};
