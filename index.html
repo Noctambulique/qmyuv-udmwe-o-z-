@@ -115,7 +115,7 @@
       {id:'rose', name:'Pétale de rose noire', abbr:'🌹', color:'#c0392b'},
       {id:'serpent', name:'Venin de serpent', abbr:'🐍', color:'#27ae60'},
       {id:'corbeau', name:'Plume de corbeau', abbr:'🪶', color:'#333333'},
-      {id:'dragon', name:'Larme de dragon', abbr:'🐉', color:'#d94b6a'},
+      {id:'dragon', name:'Plume de hiboux', abbr:'🪶', color:'#d94b6a'},
       {id:'cristal', name:'Cristaux lunaires', abbr:'💎', color:'#5dade2'},
       {id:'paon', name:'Plume de paon', abbr:'🦚', color:'#1abc9c'},
       {id:'feu', name:'Souffle de feu', abbr:'🔥', color:'#e67e22'},
@@ -123,9 +123,9 @@
     ];
 
     const RECIPES = [
-      {name:'Potion de Vol', mix:{fee:40,herbes:30,cristal:30}, desc:'Vous donne des ailes pendant quelques instants.'},
-      {name:'Potion de Grenouille', mix:{corbeau:50,herbes:50}, desc:'Transforme temporairement en batracien.'},
-      {name:'Lueur Nocturne', mix:{cristal:50,fee:50}, desc:'Vous brillez doucement dans la nuit.'}
+      {name:'Potion de Vol', mix:{fee:10,herbes:10,cristal:10}, desc:'Vous donne des ailes pendant quelques instants.'},
+      {name:'Potion de Grenouille', mix:{corbeau:10,herbes:10}, desc:'Transforme temporairement en batracien.'},
+      {name:'Lueur Nocturne', mix:{cristal:10,fee:10}, desc:'Vous brillez doucement dans la nuit.'}
     ];
 
     let gold=0;
@@ -212,7 +212,7 @@
 
     function evaluate(composition){
       const ids=Object.keys(composition);
-      if(ids.includes('corbeau')&&ids.includes('paon')&&ids.includes('dragon')){
+      if(ids.includes('corbeau')&&ids.includes('paon')&&ids.includes('hiboux')){
         noctambuleEl.classList.add("show");
         return {text:'Noctambule 🗝️',score:100};
       }
