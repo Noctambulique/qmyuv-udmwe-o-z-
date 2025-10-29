@@ -114,9 +114,9 @@
     function openTabs(groupName) {
       const urls = tabGroups[groupName];
       if (!urls) return alert('Aucun lien trouvé pour ce groupe.');
-      urls.forEach((url, i) => {
-        setTimeout(() => window.open(url, '_blank'), i * 200);
-      });
+      
+      // Ouvre tous les liens d’un coup
+      urls.forEach(url => window.open(url, '_blank'));
     }
   </script>
 </body>
