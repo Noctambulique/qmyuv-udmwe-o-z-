@@ -1,274 +1,241 @@
 <!doctype html>
 <html lang="fr">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Atelier de Potions Magiques</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Multi‑Tab Opener — Mood Presets</title>
   <style>
-    :root{--bg:#1a0f1f;--card:#24122b;--accent:#9b59b6;--muted:#a29fb0}
-    html,body{height:100%;margin:0;font-family:Inter,Segoe UI,Roboto,Arial;background:linear-gradient(180deg,#0d0511 0%,#1a0f1f 100%);color:#f0eaf8}
-    .wrap{max-width:1000px;margin:24px auto;padding:18px}
-    header{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
-    h1{margin:0;font-size:22px}
-    .board{display:grid;grid-template-columns:260px 1fr 260px;gap:14px;margin-top:18px}
-    .panel{background:linear-gradient(180deg,var(--card),#13091a);border-radius:12px;padding:12px;box-shadow:0 6px 18px rgba(0,0,0,.6)}
-
-    /* Ingrédients */
-    .bottles{display:grid;grid-template-columns:1fr;gap:10px}
-    .bottle{display:flex;align-items:center;gap:10px;padding:8px;border-radius:8px;background:rgba(255,255,255,0.03);cursor:pointer;transition:transform .12s}
-    .bottle:hover{transform:translateY(-4px)}
-    .bottle .cap{width:40px;height:40px;border-radius:6px;background:#0f1724;display:flex;align-items:center;justify-content:center;font-weight:700}
-    .bottle .meta{flex:1}
-    .bottle .meta small{display:block;color:var(--muted)}
-
-    /* Chaudron */
-    .bar-view{display:flex;flex-direction:column;align-items:center;gap:12px;padding:18px}
-    .stage{width:100%;max-width:520px;height:260px;border-radius:14px;background:linear-gradient(180deg,#12091b,#200d2b);display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
-    .glass{width:180px;height:180px;border:6px solid rgba(255,255,255,0.08);border-radius:50%;background:rgba(255,255,255,0.02);position:relative;overflow:hidden;display:flex;flex-direction:column-reverse;align-items:center}
-    .liquid{width:100%;transition:height .35s ease, background .25s linear;display:block}
-    .garnish{position:absolute;top:12px;right:12px;font-size:22px}
-    .controls{display:flex;gap:10px;align-items:center;margin-top:8px;flex-wrap:wrap}
-    button{flex:1;min-width:90px;background:transparent;border:1px solid rgba(255,255,255,0.06);color:inherit;padding:10px;border-radius:8px;cursor:pointer}
-    .btn-primary{background:var(--accent);color:#fff;border:none}
-
-    /* Recettes + Historique */
-    .recipes{display:flex;flex-direction:column;gap:10px}
-    .recipe{padding:10px;border-radius:8px;background:rgba(255,255,255,0.03)}
-    .history{max-height:240px;overflow:auto;padding:8px;border-radius:8px;background:rgba(255,255,255,0.01)}
-
-    /* Réactions */
-    .reaction{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-size:20px;padding:8px 14px;border-radius:12px;background:rgba(0,0,0,0.6);opacity:0;transition:opacity .25s,transform .35s;text-align:center}
-    .reaction.show{opacity:1;transform:translate(-50%,-90%)}
-
-    /* Effet Noctambule */
-    .noctambule{
-      position:absolute;
-      top:50%;left:50%;
-      transform:translate(-50%,-50%);
-      font-size:34px;
-      font-weight:bold;
-      color:#e0d4ff;
-      text-shadow:0 0 15px #9b59b6,0 0 25px #fff;
-      opacity:0;
-      transition:opacity 0.8s ease;
-      z-index:20;
-    }
-    .noctambule.show{opacity:1;}
-
-    footer{margin-top:14px;color:var(--muted);font-size:13px;text-align:center}
-    @media (max-width:900px){.board{grid-template-columns:1fr;}.panel{padding:10px}}
+    :root{--bg:#0f1724;--card:#0b1220;--accent:#06b6d4;--muted:#9aa4b2;--glass:rgba(255,255,255,0.03)}
+    *{box-sizing:border-box;font-family:Inter,ui-sans-serif,system-ui,Segoe UI,Roboto,'Helvetica Neue',Arial}
+    body{margin:0;background:linear-gradient(180deg,#071028 0%, #071824 100%);color:#e6eef6;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}
+    .app{width:980px;max-width:100%;background:var(--card);border-radius:12px;padding:18px;box-shadow:0 8px 30px rgba(2,6,23,0.6);}
+    header{display:flex;align-items:center;gap:12px}
+    header h1{margin:0;font-size:18px}
+    .controls{display:flex;gap:8px;margin-left:auto}
+    .btn{background:var(--glass);border:1px solid rgba(255,255,255,0.04);padding:8px 12px;border-radius:10px;color:inherit;cursor:pointer}
+    .btn.positive{border-color:rgba(6,182,212,0.15)}
+    .moods{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+    .mood{padding:10px 14px;border-radius:10px;background:linear-gradient(180deg,rgba(255,255,255,0.02),transparent);cursor:pointer;border:1px solid rgba(255,255,255,0.03);min-width:120px}
+    .mood .title{font-weight:600}
+    .mood .meta{font-size:12px;color:var(--muted);margin-top:6px}
+    .list{display:grid;grid-template-columns:1fr 220px;gap:12px;margin-top:14px}
+    .panel{background:rgba(255,255,255,0.02);padding:12px;border-radius:10px}
+    .panel h3{margin:0 0 8px 0;font-size:14px}
+    label{display:block;font-size:13px;color:var(--muted);margin-bottom:6px}
+    input[type=text], textarea, select{width:100%;padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:inherit}
+    textarea{min-height:100px;resize:vertical}
+    .preset-row{display:flex;gap:8px;align-items:center;justify-content:space-between}
+    .small{font-size:12px;padding:6px 8px;border-radius:8px}
+    footer{margin-top:12px;color:var(--muted);font-size:12px}
+    .actions{display:flex;gap:8px}
+    .mood-actions{display:flex;gap:6px;margin-top:8px}
+    .example{font-size:12px;color:var(--muted);margin-top:10px}
+    .import-export{display:flex;gap:8px;margin-top:8px}
   </style>
 </head>
 <body>
-  <div class="wrap">
+  <div class="app">
     <header>
-      <h1>Atelier de Potions Magiques</h1>
-      <div style="margin-left:auto;color:var(--muted)">Or : <span id="gold">0</span> 💰</div>
+      <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='28' height='28'><rect width='28' height='28' rx='6' fill='%2306b6d4'/><text x='50%' y='55%' font-size='16' text-anchor='middle' font-family='Arial' fill='white'>MT</text></svg>" alt="logo" style="width:36px;height:36px;border-radius:8px;"/>
+      <h1>Multi‑Tab Opener — Presets par mood</h1>
+      <div class="controls">
+        <button class="btn" id="addPresetBtn">➕ Nouveau mood</button>
+        <button class="btn" id="openAllBtn">Ouvrir le mood sélectionné</button>
+        <button class="btn" id="exportBtn">Exporter JSON</button>
+      </div>
     </header>
 
-    <div class="board">
-      <div class="panel">
-        <h3>Ingrédients</h3>
-        <div class="bottles" id="bottles"></div>
-      </div>
+    <div class="moods" id="moodsContainer">
+      <!-- boutons moods insérés ici -->
+    </div>
 
-      <div class="panel bar-view">
-        <div class="stage">
-          <div class="glass" id="glass">
-            <div id="liquid" class="liquid" style="height:0%"></div>
+    <div class="list">
+      <div class="panel" style="min-height:220px;">
+        <h3>Éditeur de mood</h3>
+        <div id="editorEmpty">Sélectionnez ou créez un mood pour l'éditer.</div>
+        <div id="editor" style="display:none">
+          <label>Nom du mood <input type="text" id="presetName"/></label>
+          <label>Couleur du bouton <input type="text" id="presetColor" placeholder="#06b6d4 ou couleur CSS"/></label>
+          <label>URLs (1 par ligne)<textarea id="presetUrls" placeholder="https://mail.example.com"></textarea></label>
+          <div style="display:flex;gap:8px;margin-top:8px">
+            <button class="btn positive" id="savePresetBtn">Enregistrer</button>
+            <button class="btn" id="deletePresetBtn">Supprimer</button>
+            <button class="btn" id="duplicatePresetBtn">Dupliquer</button>
           </div>
-          <div class="garnish" id="garnish">✨</div>
-          <div class="reaction" id="reaction">OK</div>
-          <div id="noctambule" class="noctambule">Noctambule 🗝️</div>
-        </div>
-
-        <div class="controls">
-          <button id="undo">Annuler</button>
-          <button id="clear">Vider</button>
-          <button id="shake">Agiter</button>
-          <button class="btn-primary" id="serve">Servir</button>
-        </div>
-
-        <div style="width:100%;display:flex;justify-content:space-between;margin-top:8px;flex-wrap:wrap">
-          <div>Volume: <span id="volume">0</span>/100</div>
-          <div>État: <span id="state">Calme</span></div>
+          <div class="example">Astuce: vous pouvez mettre des URLs avec des paramètres &mdash; ex: https://example.com/?utm_source=mood</div>
         </div>
       </div>
 
       <div class="panel">
-        <h3>Recettes mystiques</h3>
-        <div class="recipes" id="recipes"></div>
-        <h3 style="margin-top:12px">Historique</h3>
-        <div class="history" id="history"></div>
+        <h3>Paramètres</h3>
+        <label>Mode d'ouverture
+          <select id="openMode">
+            <option value="tabs">Ouvrir en onglets (par défaut)</option>
+            <option value="windows">Ouvrir en nouvelles fenêtres</option>
+            <option value="background">Ouvrir en arrière-plan (peut être bloqué)</option>
+          </select>
+        </label>
+        <label>Délai entre chaque ouverture (ms) <input type="text" id="delayMs" value="200"/></label>
+
+        <h3 style="margin-top:10px">Import / Export</h3>
+        <div class="import-export">
+          <input type="file" id="importFile" accept="application/json" />
+          <button class="btn" id="importBtn">Importer JSON</button>
+        </div>
+        <div style="margin-top:8px">
+          <button class="btn" id="resetBtn">Réinitialiser (supprime tout)</button>
+        </div>
       </div>
     </div>
 
-    <footer>Version potions magiques ✨ — Optimisé pour mobile</footer>
+    <footer>Les presets sont sauvegardés localement dans votre navigateur (localStorage). Vous pouvez exporter et importer des JSON pour les partager ou les sauvegarder.</footer>
   </div>
 
   <script>
-    /* --- ingrédients (ordre mélangé + nouveaux) --- */
-    const INGREDIENTS = [
-      {id:'etoile', name:'Poussière d’étoile', abbr:'🌌', color:'#8e44ad'},
-      {id:'herbes', name:'Herbes anciennes', abbr:'🌿', color:'#2ecc71'},
-      {id:'fee', name:'Poussière de fée', abbr:'✨', color:'#f9d6ff'},
-      {id:'rose', name:'Pétale de rose noire', abbr:'🌹', color:'#c0392b'},
-      {id:'serpent', name:'Venin de serpent', abbr:'🐍', color:'#27ae60'},
-      {id:'corbeau', name:'Plume de corbeau', abbr:'🐦‍⬛', color:'#333333'},
-      {id:'hiboux', name:'Plume de hiboux', abbr:'🪶', color:'#d94b6a'},
-      {id:'cristal', name:'Cristaux lunaires', abbr:'💎', color:'#5dade2'},
-      {id:'paon', name:'Plume de paon', abbr:'🦚', color:'#1abc9c'},
-      {id:'feu', name:'Souffle de feu', abbr:'🔥', color:'#e67e22'},
-      {id:'glace', name:'Éclat de glace éternelle', abbr:'❄️', color:'#85c1e9'}
-    ];
+    // Key names
+    const STORAGE_KEY = 'mtop_presets_v1';
 
-    const RECIPES = [
-      {name:'Potion de Vol', mix:{fee:10,herbes:10,cristal:10}, desc:'Vous donne des ailes pendant quelques instants.'},
-      {name:'Potion de Grenouille', mix:{corbeau:10,herbes:10}, desc:'Transforme temporairement en batracien.'},
-      {name:'Lueur Nocturne', mix:{cristal:10,fee:10}, desc:'Vous brillez doucement dans la nuit.'}
-    ];
+    // DOM
+    const moodsContainer = document.getElementById('moodsContainer');
+    const addPresetBtn = document.getElementById('addPresetBtn');
+    const openAllBtn = document.getElementById('openAllBtn');
+    const exportBtn = document.getElementById('exportBtn');
+    const editor = document.getElementById('editor');
+    const editorEmpty = document.getElementById('editorEmpty');
+    const presetName = document.getElementById('presetName');
+    const presetColor = document.getElementById('presetColor');
+    const presetUrls = document.getElementById('presetUrls');
+    const savePresetBtn = document.getElementById('savePresetBtn');
+    const deletePresetBtn = document.getElementById('deletePresetBtn');
+    const duplicatePresetBtn = document.getElementById('duplicatePresetBtn');
+    const openMode = document.getElementById('openMode');
+    const delayMs = document.getElementById('delayMs');
+    const importFile = document.getElementById('importFile');
+    const importBtn = document.getElementById('importBtn');
+    const resetBtn = document.getElementById('resetBtn');
 
-    let gold=0;
-    const state = { pours:[], volume:0, shaken:false };
+    let presets = [];
+    let selectedId = null;
 
-    const bottlesEl=document.getElementById('bottles');
-    const recipesEl=document.getElementById('recipes');
-    const historyEl=document.getElementById('history');
-    const liquidEl=document.getElementById('liquid');
-    const volumeEl=document.getElementById('volume');
-    const stateEl=document.getElementById('state');
-    const reactionEl=document.getElementById('reaction');
-    const garnishEl=document.getElementById('garnish');
-    const noctambuleEl=document.getElementById('noctambule');
-    const goldEl=document.getElementById('gold');
+    // Utilities
+    function uid(){return 'id_'+Math.random().toString(36).slice(2,9)}
 
-    INGREDIENTS.forEach(ing=>{
-      const div=document.createElement('div');
-      div.className='bottle';
-      div.dataset.id=ing.id;
-      div.innerHTML=`<div class="cap" style="background:${ing.color}">${ing.abbr}</div>
-        <div class="meta"><strong>${ing.name}</strong></div>
-        <div><small>+10</small></div>`;
-      div.addEventListener('click',()=>pour(ing.id,10));
-      bottlesEl.appendChild(div);
-    });
-
-    RECIPES.forEach(r=>{
-      const d=document.createElement('div');d.className='recipe';
-      const list=Object.entries(r.mix).map(([k,v])=>`${k}:${v}`).join(', ');
-      d.innerHTML=`<strong>${r.name}</strong><div style="font-size:13px;color:var(--muted)">${r.desc}</div><div style="margin-top:6px;font-size:12px">${list}</div>`;
-      recipesEl.appendChild(d);
-    });
-
-    document.getElementById('undo').addEventListener('click',undo);
-    document.getElementById('clear').addEventListener('click',clearGlass);
-    document.getElementById('shake').addEventListener('click',()=>{state.shaken=true;stateEl.textContent='Agité';showReaction('Agité !');});
-    document.getElementById('serve').addEventListener('click',serve);
-
-    function pour(id,amount){
-      if(state.pours.length>=3){showReaction('Max 3 ingrédients !');return;}
-      state.pours.push({id,amount});
-      state.volume+=Math.round(100/3);
-      if(state.volume>100)state.volume=100;
-      updateGlass();
-      showReaction(`Ajout de ${id}`);
+    function saveToStorage(){localStorage.setItem(STORAGE_KEY, JSON.stringify(presets))}
+    function loadFromStorage(){
+      try{
+        const raw = localStorage.getItem(STORAGE_KEY);
+        presets = raw ? JSON.parse(raw) : [];
+      }catch(e){presets = []}
     }
 
-    function undo(){
-      const last=state.pours.pop();
-      if(!last){showReaction('Rien à annuler');return;}
-      state.volume-=Math.round(100/3);
-      if(state.volume<0)state.volume=0;
-      updateGlass();
-      showReaction(`Retiré ${last.id}`);
+    function renderMoods(){
+      moodsContainer.innerHTML = '';
+      if(presets.length===0){moodsContainer.innerHTML = '<div style="color:var(--muted)">Aucun mood — créez-en un.</div>'}
+      presets.forEach(p=>{
+        const btn = document.createElement('div');
+        btn.className = 'mood';
+        btn.style.borderColor = 'rgba(255,255,255,0.03)';
+        btn.style.background = `linear-gradient(180deg, rgba(255,255,255,0.02), transparent)`;
+        btn.innerHTML = `<div class='title'>${escapeHtml(p.name)}</div><div class='meta'>${p.urls.length} URL(s)</div>`;
+        if(p.color) btn.style.borderLeft = `4px solid ${p.color}`;
+        btn.addEventListener('click', ()=>{selectPreset(p.id)});
+        // right actions
+        const actions = document.createElement('div');
+        actions.style.marginTop = '8px';
+        actions.style.display = 'flex';
+        actions.style.gap = '6px';
+        const openBtn = document.createElement('button'); openBtn.className='small btn'; openBtn.textContent='Ouvrir';
+        openBtn.onclick = (e)=>{e.stopPropagation(); openPreset(p.id)};
+        const editBtn = document.createElement('button'); editBtn.className='small btn'; editBtn.textContent='Éditer';
+        editBtn.onclick = (e)=>{e.stopPropagation(); selectPreset(p.id)};
+        actions.appendChild(openBtn); actions.appendChild(editBtn);
+        btn.appendChild(actions);
+        moodsContainer.appendChild(btn);
+      })
     }
 
-    function clearGlass(){
-      state.pours=[];state.volume=0;state.shaken=false;
-      updateGlass();showReaction('Chaudron vidé');
-      noctambuleEl.classList.remove("show");
+    function selectPreset(id){
+      const p = presets.find(x=>x.id===id); if(!p) return;
+      selectedId = id;
+      editorEmpty.style.display = 'none'; editor.style.display = 'block';
+      presetName.value = p.name; presetColor.value = p.color||''; presetUrls.value = p.urls.join('\n');
     }
 
-    function serve(){
-      if(state.volume===0){showReaction('Vide !');return;}
-      const s=summarizeState();
-      const result=evaluate(s.composition);
-      appendHistory(`${new Date().toLocaleTimeString()} — ${result.text} — ${s.summary}`);
-      animateOutcome(result);
-      gold+=Math.floor(result.score/10); // chaque potion rapporte de l'or
-      goldEl.textContent=gold;
-      state.pours=[];state.volume=0;state.shaken=false;
-      setTimeout(updateGlass,800);
+    function openPreset(id){
+      const p = presets.find(x=>x.id===id); if(!p) return;
+      const mode = openMode.value;
+      const d = Math.max(0, parseInt(delayMs.value)||0);
+      p.urls.forEach((u,i)=>{
+        setTimeout(()=>{
+          if(mode==='windows') window.open(u,'_blank','noopener');
+          else if(mode==='background') window.open(u,'_blank');
+          else window.open(u,'_blank');
+        }, i*d);
+      })
     }
 
-    function summarizeState(){
-      const map={};
-      state.pours.forEach(p=>map[p.id]=(map[p.id]||0)+p.amount);
-      const comp={};
-      Object.keys(map).forEach(k=>comp[k]=Math.round(map[k]/(state.volume||1)*100));
-      const parts=Object.entries(map).map(([k,v])=>`${k}:${v}`).join(', ');
-      return {map,composition:comp,summary:parts||'vide'};
-    }
+    function escapeHtml(str){return str.replace(/[&<>\"]+/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[c]||c))}
 
-    function evaluate(composition){
-      const ids=Object.keys(composition);
-      if(ids.includes('corbeau')&&ids.includes('paon')&&ids.includes('hiboux')){
-        noctambuleEl.classList.add("show");
-        return {text:'Noctambule 🗝️',score:100};
-      }
-      if(JSON.stringify(composition)==='{}')return {text:'Inerte',score:0};
-      const randomEffects=[
-        'Vous flottez dans les airs !',
-        'Vous coassez comme une grenouille.',
-        'Vos yeux brillent dans le noir.',
-        'Un éternuement de paillettes !',
-        'Vous sentez un parfum de forêt ancienne.'
-      ];
-      const effect=randomEffects[Math.floor(Math.random()*randomEffects.length)];
-      return {text:effect,score:50+Math.random()*50};
-    }
+    // CRUD
+    addPresetBtn.addEventListener('click', ()=>{
+      const newPreset = {id:uid(),name:'Nouveau mood',color:'#06b6d4',urls:['https://example.com']};
+      presets.unshift(newPreset); saveToStorage(); renderMoods(); selectPreset(newPreset.id);
+    })
 
-    function animateOutcome(score){
-      const r=reactionEl;
-      r.textContent=score.text;
-      r.classList.add('show');
-      garnishEl.textContent=score.text.includes('Noctambule')?'🌑':'✨';
-      setTimeout(()=>r.classList.remove('show'),1600);
-    }
+    savePresetBtn.addEventListener('click', ()=>{
+      if(!selectedId) return;
+      const p = presets.find(x=>x.id===selectedId); if(!p) return;
+      p.name = presetName.value.trim() || 'Sans nom';
+      p.color = presetColor.value.trim() || '';
+      p.urls = presetUrls.value.split('\n').map(s=>s.trim()).filter(Boolean);
+      saveToStorage(); renderMoods();
+      alert('Preset enregistré.');
+    })
 
-    function appendHistory(text){
-      const d=document.createElement('div');
-      d.style.padding='6px 4px';d.style.fontSize='13px';d.style.borderBottom='1px dashed rgba(255,255,255,0.02)';
-      d.textContent=text;historyEl.prepend(d);
-    }
+    deletePresetBtn.addEventListener('click', ()=>{
+      if(!selectedId) return;
+      if(!confirm('Supprimer ce mood ?')) return;
+      presets = presets.filter(x=>x.id!==selectedId); selectedId=null; saveToStorage(); renderMoods(); editor.style.display='none'; editorEmpty.style.display='block';
+    })
 
-    function updateGlass(){
-      const h=Math.min(100,state.volume);
-      liquidEl.style.height=h+'%';
-      let r=0,g=0,b=0,total=0;
-      state.pours.forEach(p=>{
-        const ing=INGREDIENTS.find(i=>i.id===p.id);
-        if(!ing)return;
-        const col=hexToRgb(ing.color);if(!col)return;
-        r+=col.r*p.amount;g+=col.g*p.amount;b+=col.b*p.amount;total+=p.amount;
-      });
-      if(total>0){r=Math.round(r/total);g=Math.round(g/total);b=Math.round(b/total);
-        liquidEl.style.background=`linear-gradient(180deg,rgba(${r},${g},${b},0.95),rgba(${Math.max(0,r-30)},${Math.max(0,g-30)},${Math.max(0,b-30)},0.9))`;}
-      else liquidEl.style.background='transparent';
-      volumeEl.textContent=state.volume;
-    }
+    duplicatePresetBtn.addEventListener('click', ()=>{
+      if(!selectedId) return; const p = presets.find(x=>x.id===selectedId); if(!p) return;
+      const copy = {id:uid(),name:p.name+' (copie)',color:p.color,urls:[...p.urls]}; presets.unshift(copy); saveToStorage(); renderMoods(); selectPreset(copy.id);
+    })
 
-    function showReaction(txt){
-      reactionEl.textContent=txt;reactionEl.classList.add('show');
-      setTimeout(()=>reactionEl.classList.remove('show'),900);
-    }
+    openAllBtn.addEventListener('click', ()=>{
+      if(!selectedId){alert('Sélectionnez un mood d\'abord.');return}
+      openPreset(selectedId);
+    })
 
-    function hexToRgb(hex){
-      if(!hex)return null;hex=hex.replace('#','');
-      if(hex.length===3)hex=hex.split('').map(c=>c+c).join('');
-      const num=parseInt(hex,16);
-      return{r:(num>>16)&255,g:(num>>8)&255,b:num&255};
+    exportBtn.addEventListener('click', ()=>{
+      const dataStr = JSON.stringify(presets, null, 2);
+      const blob = new Blob([dataStr], {type:'application/json'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a'); a.href = url; a.download = 'mtop_presets.json'; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+    })
+
+    importBtn.addEventListener('click', ()=>{
+      const file = importFile.files[0]; if(!file){alert('Choisissez un fichier JSON.');return}
+      const fr = new FileReader(); fr.onload = ()=>{
+        try{const imported = JSON.parse(fr.result); if(!Array.isArray(imported)) throw new Error('Format invalide');
+          // validate
+          const validated = imported.map((p)=>({id:p.id||uid(),name:p.name||'Sans nom',color:p.color||'',urls:Array.isArray(p.urls)?p.urls:[] }));
+          presets = validated; saveToStorage(); renderMoods(); alert('Importation réussie.');
+        }catch(e){alert('Fichier JSON invalide : '+e.message)}
+      }; fr.readAsText(file);
+    })
+
+    resetBtn.addEventListener('click', ()=>{if(confirm('Réinitialiser tous les presets ?')){presets=[];saveToStorage();renderMoods();editor.style.display='none';editorEmpty.style.display='block';selectedId=null}})
+
+    // Init
+    loadFromStorage(); if(presets.length===0){
+      presets = [
+        {id:uid(),name:'Travail',color:'#06b6d4',urls:['https://mail.google.com','https://calendar.google.com','https://github.com']},
+        {id:uid(),name:'Détente',color:'#a78bfa',urls:['https://news.ycombinator.com','https://www.reddit.com','https://youtube.com']}
+      ]; saveToStorage();
     }
+    renderMoods();
   </script>
 </body>
 </html>
