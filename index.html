@@ -1,241 +1,123 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="fr">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Multi‑Tab Opener — Mood Presets</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Multi-Tab Opener</title>
   <style>
-    :root{--bg:#0f1724;--card:#0b1220;--accent:#06b6d4;--muted:#9aa4b2;--glass:rgba(255,255,255,0.03)}
-    *{box-sizing:border-box;font-family:Inter,ui-sans-serif,system-ui,Segoe UI,Roboto,'Helvetica Neue',Arial}
-    body{margin:0;background:linear-gradient(180deg,#071028 0%, #071824 100%);color:#e6eef6;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:24px}
-    .app{width:980px;max-width:100%;background:var(--card);border-radius:12px;padding:18px;box-shadow:0 8px 30px rgba(2,6,23,0.6);}
-    header{display:flex;align-items:center;gap:12px}
-    header h1{margin:0;font-size:18px}
-    .controls{display:flex;gap:8px;margin-left:auto}
-    .btn{background:var(--glass);border:1px solid rgba(255,255,255,0.04);padding:8px 12px;border-radius:10px;color:inherit;cursor:pointer}
-    .btn.positive{border-color:rgba(6,182,212,0.15)}
-    .moods{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
-    .mood{padding:10px 14px;border-radius:10px;background:linear-gradient(180deg,rgba(255,255,255,0.02),transparent);cursor:pointer;border:1px solid rgba(255,255,255,0.03);min-width:120px}
-    .mood .title{font-weight:600}
-    .mood .meta{font-size:12px;color:var(--muted);margin-top:6px}
-    .list{display:grid;grid-template-columns:1fr 220px;gap:12px;margin-top:14px}
-    .panel{background:rgba(255,255,255,0.02);padding:12px;border-radius:10px}
-    .panel h3{margin:0 0 8px 0;font-size:14px}
-    label{display:block;font-size:13px;color:var(--muted);margin-bottom:6px}
-    input[type=text], textarea, select{width:100%;padding:8px;border-radius:8px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:inherit}
-    textarea{min-height:100px;resize:vertical}
-    .preset-row{display:flex;gap:8px;align-items:center;justify-content:space-between}
-    .small{font-size:12px;padding:6px 8px;border-radius:8px}
-    footer{margin-top:12px;color:var(--muted);font-size:12px}
-    .actions{display:flex;gap:8px}
-    .mood-actions{display:flex;gap:6px;margin-top:8px}
-    .example{font-size:12px;color:var(--muted);margin-top:10px}
-    .import-export{display:flex;gap:8px;margin-top:8px}
+    :root {
+      --bg: #0b0f1a;
+      --button-bg: #1a2238;
+      --button-hover: #00d4ff;
+      --text-color: #e5e9f0;
+      --font: 'Inter', system-ui, sans-serif;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      background: radial-gradient(circle at top left, #111827, #0b0f1a 70%);
+      color: var(--text-color);
+      font-family: var(--font);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 2rem;
+    }
+
+    h1 {
+      font-size: 1.5rem;
+      font-weight: 600;
+      color: #9ca3af;
+      letter-spacing: 0.5px;
+      text-align: center;
+    }
+
+    .buttons {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1rem;
+      max-width: 800px;
+    }
+
+    button {
+      background: var(--button-bg);
+      color: var(--text-color);
+      border: 2px solid transparent;
+      border-radius: 12px;
+      padding: 1.5rem 2.5rem;
+      font-size: 1.3rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      min-width: 200px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+    }
+
+    button:hover {
+      border-color: var(--button-hover);
+      color: var(--button-hover);
+      transform: translateY(-3px);
+      box-shadow: 0 6px 20px rgba(0, 212, 255, 0.25);
+    }
+
+    footer {
+      margin-top: 2rem;
+      font-size: 0.85rem;
+      color: #6b7280;
+      text-align: center;
+    }
   </style>
 </head>
 <body>
-  <div class="app">
-    <header>
-      <img src="data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='28' height='28'><rect width='28' height='28' rx='6' fill='%2306b6d4'/><text x='50%' y='55%' font-size='16' text-anchor='middle' font-family='Arial' fill='white'>MT</text></svg>" alt="logo" style="width:36px;height:36px;border-radius:8px;"/>
-      <h1>Multi‑Tab Opener — Presets par mood</h1>
-      <div class="controls">
-        <button class="btn" id="addPresetBtn">➕ Nouveau mood</button>
-        <button class="btn" id="openAllBtn">Ouvrir le mood sélectionné</button>
-        <button class="btn" id="exportBtn">Exporter JSON</button>
-      </div>
-    </header>
 
-    <div class="moods" id="moodsContainer">
-      <!-- boutons moods insérés ici -->
-    </div>
+  <h1>🌙 Multi-Tab Opener</h1>
 
-    <div class="list">
-      <div class="panel" style="min-height:220px;">
-        <h3>Éditeur de mood</h3>
-        <div id="editorEmpty">Sélectionnez ou créez un mood pour l'éditer.</div>
-        <div id="editor" style="display:none">
-          <label>Nom du mood <input type="text" id="presetName"/></label>
-          <label>Couleur du bouton <input type="text" id="presetColor" placeholder="#06b6d4 ou couleur CSS"/></label>
-          <label>URLs (1 par ligne)<textarea id="presetUrls" placeholder="https://mail.example.com"></textarea></label>
-          <div style="display:flex;gap:8px;margin-top:8px">
-            <button class="btn positive" id="savePresetBtn">Enregistrer</button>
-            <button class="btn" id="deletePresetBtn">Supprimer</button>
-            <button class="btn" id="duplicatePresetBtn">Dupliquer</button>
-          </div>
-          <div class="example">Astuce: vous pouvez mettre des URLs avec des paramètres &mdash; ex: https://example.com/?utm_source=mood</div>
-        </div>
-      </div>
-
-      <div class="panel">
-        <h3>Paramètres</h3>
-        <label>Mode d'ouverture
-          <select id="openMode">
-            <option value="tabs">Ouvrir en onglets (par défaut)</option>
-            <option value="windows">Ouvrir en nouvelles fenêtres</option>
-            <option value="background">Ouvrir en arrière-plan (peut être bloqué)</option>
-          </select>
-        </label>
-        <label>Délai entre chaque ouverture (ms) <input type="text" id="delayMs" value="200"/></label>
-
-        <h3 style="margin-top:10px">Import / Export</h3>
-        <div class="import-export">
-          <input type="file" id="importFile" accept="application/json" />
-          <button class="btn" id="importBtn">Importer JSON</button>
-        </div>
-        <div style="margin-top:8px">
-          <button class="btn" id="resetBtn">Réinitialiser (supprime tout)</button>
-        </div>
-      </div>
-    </div>
-
-    <footer>Les presets sont sauvegardés localement dans votre navigateur (localStorage). Vous pouvez exporter et importer des JSON pour les partager ou les sauvegarder.</footer>
+  <div class="buttons">
+    <!-- === PERSONNALISE ICI === -->
+    <button onclick="openTabs('travail')">💼 Travail</button>
+    <button onclick="openTabs('detente')">🎧 Détente</button>
+    <button onclick="openTabs('focus')">🚀 Focus</button>
+    <button onclick="openTabs('veille')">📰 Veille</button>
   </div>
 
+  <footer>Personnalise ce code dans ton éditeur ✨</footer>
+
   <script>
-    // Key names
-    const STORAGE_KEY = 'mtop_presets_v1';
+    // === PERSONNALISE ICI ===
+    const tabGroups = {
+      travail: [
+        'https://mail.google.com',
+        'https://calendar.google.com',
+        'https://github.com',
+        'https://notion.so'
+      ],
+      detente: [
+        'https://youtube.com',
+        'https://reddit.com',
+        'https://twitter.com'
+      ],
+      focus: [
+        'https://chat.openai.com',
+        'https://todoist.com',
+        'https://pomofocus.io'
+      ],
+      veille: [
+        'https://news.ycombinator.com',
+        'https://medium.com',
+        'https://developer.mozilla.org'
+      ]
+    };
 
-    // DOM
-    const moodsContainer = document.getElementById('moodsContainer');
-    const addPresetBtn = document.getElementById('addPresetBtn');
-    const openAllBtn = document.getElementById('openAllBtn');
-    const exportBtn = document.getElementById('exportBtn');
-    const editor = document.getElementById('editor');
-    const editorEmpty = document.getElementById('editorEmpty');
-    const presetName = document.getElementById('presetName');
-    const presetColor = document.getElementById('presetColor');
-    const presetUrls = document.getElementById('presetUrls');
-    const savePresetBtn = document.getElementById('savePresetBtn');
-    const deletePresetBtn = document.getElementById('deletePresetBtn');
-    const duplicatePresetBtn = document.getElementById('duplicatePresetBtn');
-    const openMode = document.getElementById('openMode');
-    const delayMs = document.getElementById('delayMs');
-    const importFile = document.getElementById('importFile');
-    const importBtn = document.getElementById('importBtn');
-    const resetBtn = document.getElementById('resetBtn');
-
-    let presets = [];
-    let selectedId = null;
-
-    // Utilities
-    function uid(){return 'id_'+Math.random().toString(36).slice(2,9)}
-
-    function saveToStorage(){localStorage.setItem(STORAGE_KEY, JSON.stringify(presets))}
-    function loadFromStorage(){
-      try{
-        const raw = localStorage.getItem(STORAGE_KEY);
-        presets = raw ? JSON.parse(raw) : [];
-      }catch(e){presets = []}
+    function openTabs(groupName) {
+      const urls = tabGroups[groupName];
+      if (!urls) return alert('Aucun lien trouvé pour ce groupe.');
+      urls.forEach((url, i) => {
+        setTimeout(() => window.open(url, '_blank'), i * 200);
+      });
     }
-
-    function renderMoods(){
-      moodsContainer.innerHTML = '';
-      if(presets.length===0){moodsContainer.innerHTML = '<div style="color:var(--muted)">Aucun mood — créez-en un.</div>'}
-      presets.forEach(p=>{
-        const btn = document.createElement('div');
-        btn.className = 'mood';
-        btn.style.borderColor = 'rgba(255,255,255,0.03)';
-        btn.style.background = `linear-gradient(180deg, rgba(255,255,255,0.02), transparent)`;
-        btn.innerHTML = `<div class='title'>${escapeHtml(p.name)}</div><div class='meta'>${p.urls.length} URL(s)</div>`;
-        if(p.color) btn.style.borderLeft = `4px solid ${p.color}`;
-        btn.addEventListener('click', ()=>{selectPreset(p.id)});
-        // right actions
-        const actions = document.createElement('div');
-        actions.style.marginTop = '8px';
-        actions.style.display = 'flex';
-        actions.style.gap = '6px';
-        const openBtn = document.createElement('button'); openBtn.className='small btn'; openBtn.textContent='Ouvrir';
-        openBtn.onclick = (e)=>{e.stopPropagation(); openPreset(p.id)};
-        const editBtn = document.createElement('button'); editBtn.className='small btn'; editBtn.textContent='Éditer';
-        editBtn.onclick = (e)=>{e.stopPropagation(); selectPreset(p.id)};
-        actions.appendChild(openBtn); actions.appendChild(editBtn);
-        btn.appendChild(actions);
-        moodsContainer.appendChild(btn);
-      })
-    }
-
-    function selectPreset(id){
-      const p = presets.find(x=>x.id===id); if(!p) return;
-      selectedId = id;
-      editorEmpty.style.display = 'none'; editor.style.display = 'block';
-      presetName.value = p.name; presetColor.value = p.color||''; presetUrls.value = p.urls.join('\n');
-    }
-
-    function openPreset(id){
-      const p = presets.find(x=>x.id===id); if(!p) return;
-      const mode = openMode.value;
-      const d = Math.max(0, parseInt(delayMs.value)||0);
-      p.urls.forEach((u,i)=>{
-        setTimeout(()=>{
-          if(mode==='windows') window.open(u,'_blank','noopener');
-          else if(mode==='background') window.open(u,'_blank');
-          else window.open(u,'_blank');
-        }, i*d);
-      })
-    }
-
-    function escapeHtml(str){return str.replace(/[&<>\"]+/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;"}[c]||c))}
-
-    // CRUD
-    addPresetBtn.addEventListener('click', ()=>{
-      const newPreset = {id:uid(),name:'Nouveau mood',color:'#06b6d4',urls:['https://example.com']};
-      presets.unshift(newPreset); saveToStorage(); renderMoods(); selectPreset(newPreset.id);
-    })
-
-    savePresetBtn.addEventListener('click', ()=>{
-      if(!selectedId) return;
-      const p = presets.find(x=>x.id===selectedId); if(!p) return;
-      p.name = presetName.value.trim() || 'Sans nom';
-      p.color = presetColor.value.trim() || '';
-      p.urls = presetUrls.value.split('\n').map(s=>s.trim()).filter(Boolean);
-      saveToStorage(); renderMoods();
-      alert('Preset enregistré.');
-    })
-
-    deletePresetBtn.addEventListener('click', ()=>{
-      if(!selectedId) return;
-      if(!confirm('Supprimer ce mood ?')) return;
-      presets = presets.filter(x=>x.id!==selectedId); selectedId=null; saveToStorage(); renderMoods(); editor.style.display='none'; editorEmpty.style.display='block';
-    })
-
-    duplicatePresetBtn.addEventListener('click', ()=>{
-      if(!selectedId) return; const p = presets.find(x=>x.id===selectedId); if(!p) return;
-      const copy = {id:uid(),name:p.name+' (copie)',color:p.color,urls:[...p.urls]}; presets.unshift(copy); saveToStorage(); renderMoods(); selectPreset(copy.id);
-    })
-
-    openAllBtn.addEventListener('click', ()=>{
-      if(!selectedId){alert('Sélectionnez un mood d\'abord.');return}
-      openPreset(selectedId);
-    })
-
-    exportBtn.addEventListener('click', ()=>{
-      const dataStr = JSON.stringify(presets, null, 2);
-      const blob = new Blob([dataStr], {type:'application/json'});
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a'); a.href = url; a.download = 'mtop_presets.json'; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
-    })
-
-    importBtn.addEventListener('click', ()=>{
-      const file = importFile.files[0]; if(!file){alert('Choisissez un fichier JSON.');return}
-      const fr = new FileReader(); fr.onload = ()=>{
-        try{const imported = JSON.parse(fr.result); if(!Array.isArray(imported)) throw new Error('Format invalide');
-          // validate
-          const validated = imported.map((p)=>({id:p.id||uid(),name:p.name||'Sans nom',color:p.color||'',urls:Array.isArray(p.urls)?p.urls:[] }));
-          presets = validated; saveToStorage(); renderMoods(); alert('Importation réussie.');
-        }catch(e){alert('Fichier JSON invalide : '+e.message)}
-      }; fr.readAsText(file);
-    })
-
-    resetBtn.addEventListener('click', ()=>{if(confirm('Réinitialiser tous les presets ?')){presets=[];saveToStorage();renderMoods();editor.style.display='none';editorEmpty.style.display='block';selectedId=null}})
-
-    // Init
-    loadFromStorage(); if(presets.length===0){
-      presets = [
-        {id:uid(),name:'Travail',color:'#06b6d4',urls:['https://mail.google.com','https://calendar.google.com','https://github.com']},
-        {id:uid(),name:'Détente',color:'#a78bfa',urls:['https://news.ycombinator.com','https://www.reddit.com','https://youtube.com']}
-      ]; saveToStorage();
-    }
-    renderMoods();
   </script>
 </body>
 </html>
